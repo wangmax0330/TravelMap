@@ -1,0 +1,36 @@
+-
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>可拖拽的路线规划</title>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.2&key=57261143c7bfbb2c8704c1aec1504110"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="tip">请拖拽路径试试</div>
+    <script type="text/javascript">
+    var map, route, marker;
+    //基本地图加载
+    map = new AMap.Map("container", {
+        resizeEnable: true
+    });
+    //绘制初始路径
+    var path = [];
+    path.push([116.303843, 39.983412]);
+    path.push([116.321354, 39.896436]);
+    path.push([116.407012, 39.992093]);
+    map.plugin("AMap.DragRoute", function() {
+        route = new AMap.DragRoute(map, path, AMap.DrivingPolicy.LEAST_FEE); //构造拖拽导航类
+        route.search(); //查询导航路径并开启拖拽导航
+    });
+    </script>
+</body>
+
+</html>

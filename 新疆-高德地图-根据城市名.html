@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>新疆旅游</title>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/AMap.DrivingRender1120.css" />
+    <style>
+    #panel {
+        z-index: 999;
+        position: absolute;
+        background-color: white;
+        max-height: 100%;
+        overflow-y: auto;
+        right: 0;
+        width: 280px;
+    }
+    </style>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.2&key=57261143c7bfbb2c8704c1aec1504110&plugin=AMap.Driving"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/DrivingRender1230.js"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="panel"></div>
+    <script type="text/javascript">
+    var map = new AMap.Map("container", {
+        resizeEnable: true
+    });
+    //驾车导航，您如果想修改结果展现效果，请参考页面：http://lbs.amap.com/fn/css-style/
+    var drivingOption = {
+        policy: AMap.DrivingPolicy.LEAST_TIME
+    };
+    var driving = new AMap.Driving(drivingOption); //构造驾车导航类
+    //根据起终点坐标规划驾车路线
+    driving.search(
+        [
+            { keyword: '成都武侯区双楠名城A区' },
+            { keyword: '天水市' }
+        ],
+        function(status, result) {
+            if (status === 'complete' && result.info === 'OK') {
+                (new Lib.AMap.DrivingRender()).autoRender({
+                    data: result,
+                    map: map,
+                    panel: "panel"
+                });
+            } else {
+                alert(result);
+            }
+        });
+    </script>
+</body>
+
+</html>

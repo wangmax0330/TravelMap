@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>旅游</title>
+    <!-- 高德地图 css begin-->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/AMap.DrivingRender1120.css" />
+    <!--高德地图 css  end-->
+    <!-- Bootstrap 核心 CSS 文件 begin-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Bootstrap 核心 CSS 文件 end-->
+    <style>
+    #controller_panel {
+        z-index: 999;
+        position: absolute;
+        background-color: white;
+        max-height: 100%;
+        overflow-y: auto;
+        right: 280px;
+        width: 480px;
+    }
+
+    #message {
+        z-index: 999;
+        position: absolute;
+        background-color: white;
+        max-height: 100%;
+        overflow-y: auto;
+        right: 0;
+        width: 280px;
+    }
+
+    .alert-warning {
+        z-index: 999;
+        position: absolute;
+        right: 50%;
+        display: none;
+    }
+
+    .alert-success {
+        z-index: 9999;
+        position: absolute;
+        right: 50%;
+        display: none;
+    }
+
+    .alert-error {
+        z-index: 999;
+        position: absolute;
+        right: 50%;
+        display: none;
+    }
+
+    input[type="text"] {
+        height: 25px;
+        outline: none;
+        border: 0;
+        border: 1px solid #CCCCCC;
+        padding: 0 4px;
+    }
+    </style>
+    <!--高德地图j
+    s文件  begin-->
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.2&key=57261143c7bfbb2c8704c1aec1504110&plugin=AMap.Driving"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/DrivingRender1230.js"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <script type="text/javascript" src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <!--高德地图js文件  end-->
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Bootstrap 核心 JavaScript 文件 begin-->
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Bootstrap 核心 JavaScript 文件 end-->
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="controller_panel">
+        <form class="form-inline">
+            <h4>-------目的地-------</h4>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">目的城市</div>
+                    <input type="text" class="form-control" id="destination" placeholder="目的城市">
+                </div>
+            </div>
+            <button type="button" id="searchDestination" class="btn btn-info">搜索</button>
+            <button type="button" id="markDestination" class="btn btn-info">标记</button>
+        </form>
+        <form class="form-inline">
+            <h4>-------路径规划-------</h4>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">出发城市</div>
+                    <input type="text" class="form-control" id="startAddress" placeholder="出发城市">
+                    <div class="input-group-addon" id="autoGeolocation">自行定位</div>
+                    <div class="input-group-addon" id="handGeolocation">手动定位</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">目的城市</div>
+                    <input type="text" class="form-control" id="endAddress" placeholder="目的城市">
+                </div>
+            </div>
+            <button type="button" id="searchRoute" class="btn btn-info">搜索</button>
+            <button type="button" id="generateRoute" class="btn btn-info">生成轨迹</button>
+            <button type="button" id="openApp" class="btn btn-info">点击去高德地图</button>
+        </form>
+        <h4>-------路径规划-------</h4>
+        <h4>-------路径规划-------</h4>
+        <h4>-------路径规划-------</h4>
+        <button>切换</button>
+        <button>清空地图</button>
+    </div>
+    <div id="message"></div>
+    <div class="button-group">
+        <input id="cityName" class="inputtext" placeholder="请输入城市的名称" type="text" />
+        <input id="query" class="button" value="到指定的城市" type="button" />
+    </div>
+    <div class="alert alert-warning" id="alert-warning"> </div>
+    <div class="alert alert-success" id="alert-success"> </div>
+    <div class="alert alert-warning" id="alert-error"> </div>
+    <script type="text/x-jquery-tmpl" id="address_template">
+        <p>
+            <strong>${name}</strong>
+            <br/> 经度:${lng},纬度${lat}
+        </p>
+    </script>
+    <script type="text/javascript" src="./js/tool.js"></script>
+    <script type="text/javascript" src="./js/core.js"></script>
+</body>
+
+</html>

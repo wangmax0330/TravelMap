@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <!-- 原始地址：//webapi.amap.com/ui/1.0/ui/geo/DistrictCluster/examples/click2show-marker.html -->
+    <base href="//webapi.amap.com/ui/1.0/ui/geo/DistrictCluster/examples/" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>点击后显示聚合标注</title>
+    <style>
+    html,
+    body,
+    #container {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+    }
+
+    #loadingTip {
+        position: absolute;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        padding: 3px 10px;
+        background: red;
+        color: #fff;
+        font-size: 14px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript" src='//webapi.amap.com/maps?v=1.4.2&key=57261143c7bfbb2c8704c1aec1504110'></script>
+    <!-- UI组件库 1.0 -->
+    <script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <script type="text/javascript">
+    //创建地图
+    var map = new AMap.Map('container', {
+        zoom: 4
+    });
+
+    function initPage(DistrictCluster, $) {
+
+        var distCluster = new DistrictCluster({
+            map: map, //所属的地图实例
+
+            getPosition: function(item) {
+
+                if (!item) {
+                    return null;
+                }
+
+                var parts = item.split(',');
+
+                //返回经纬度
+                return [parseFloat(parts[0]), parseFloat(parts[1])];
+            },
+
+            renderOptions: {
+                clusterMarkerKeepConsistent: false, //marker的位置随交互变化
+                getClusterMarkerPosition: function(feature) {
+                    //返回之前存储的点击位置
+                    return currentLngLat;
+
+                    //return feature.properties.center;
+                },
+                getClusterMarker: function(feature, dataItems, recycledMarker) {
+
+                    //不是当前feature，直接返回null
+                    if (feature.properties.adcode !== currentAdcode) {
+                        return null;
+                    }
+
+                    var container, title, body, nodeClassNames = {
+                        title: 'amap-ui-district-cluster-marker-title',
+                        body: 'amap-ui-district-cluster-marker-body',
+                        container: 'amap-ui-district-cluster-marker'
+                    };
+
+                    if (recycledMarker) {
+
+                        container = recycledMarker.getContent();
+
+                        title = $(container).find('.' + nodeClassNames.title)[0];
+
+                        body = $(container).find('.' + nodeClassNames.body)[0];
+
+                    } else {
+
+                        container = document.createElement('div');
+
+                        title = document.createElement('span');
+
+                        title.className = nodeClassNames.title;
+
+                        body = document.createElement('span');
+
+                        body.className = nodeClassNames.body;
+
+                        container.appendChild(title);
+
+                        container.appendChild(body);
+                    }
+
+                    var props = feature.properties,
+                        routeNames = [];
+
+                    var classNameList = [nodeClassNames.container, 'level_' + props.level, 'adcode_' + props.adcode];
+
+                    container.className = classNameList.join(' ');
+
+                    if (routeNames.length > 0) {
+
+                        routeNames.push(props.name);
+
+                        container.setAttribute('title', routeNames.join('>'));
+
+                    } else {
+                        container.removeAttribute('title');
+                    }
+
+                    $(title).html(props.name);
+                    $(body).html(dataItems.length);
+
+                    var resultMarker = recycledMarker || new AMap.Marker({
+                        topWhenClick: true,
+                        offset: new AMap.Pixel(-20, -30),
+                        content: container
+                    });
+
+                    return resultMarker;
+                }
+            }
+        });
+
+        var currentAdcode = null,
+            currentLngLat = null;
+
+        //监听区划面的点击
+        distCluster.on('featureClick', function(e, feature) {
+
+            currentAdcode = feature.properties.adcode;
+
+            //记住点击位置
+            currentLngLat = e.originalEvent.lnglat;
+
+            //重绘
+            distCluster.renderLater();
+        });
+
+         //监听区划面之外的点击
+        distCluster.on('outsideClick', function(e) {
+
+            currentAdcode = currentLngLat = null;
+
+            //重绘
+            distCluster.renderLater();
+        });
+
+        window.distCluster = distCluster;
+
+        $('<div id="loadingTip">加载数据，请稍候...</div>').appendTo(document.body);
+        $.get('http://a.amap.com/amap-ui/static/data/10w.txt', function(csv) {
+
+            $('#loadingTip').remove();
+
+            var data = csv.split('\n');
+
+            distCluster.setData(data);
+        });
+    }
+
+    //加载相关组件
+    AMapUI.load(['ui/geo/DistrictCluster', 'lib/$'], function(DistrictCluster, $) {
+
+        window.DistrictCluster = DistrictCluster;
+
+        //启动页面
+        initPage(DistrictCluster, $);
+    });
+    </script>
+</body>
+
+</html>
