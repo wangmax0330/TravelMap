@@ -20,7 +20,7 @@
         background-color: white;
         max-height: 100%;
         overflow-y: auto;
-        right: 280px;
+        left: 10px;
         width: 480px;
     }
 
@@ -32,6 +32,17 @@
         overflow-y: auto;
         right: 0;
         width: 280px;
+    }
+
+    #center_message {
+        z-index: 999;
+        position: absolute;
+        background-color: white;
+        max-height: 100%;
+        overflow-y: auto;
+        left: 10px;
+        bottom: 10px;
+        width: 400px;
     }
 
     .alert-warning {
@@ -56,7 +67,7 @@
     }
 
     input[type="text"] {
-        height: 25px;
+        height: 35px;
         outline: none;
         border: 0;
         border: 1px solid #CCCCCC;
@@ -65,7 +76,7 @@
     </style>
     <!--高德地图j
     s文件  begin-->
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.2&key=57261143c7bfbb2c8704c1aec1504110&plugin=AMap.Driving"></script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.2&key=57261143c7bfbb2c8704c1aec1504110"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/DrivingRender1230.js"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
     <script type="text/javascript" src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
@@ -85,10 +96,10 @@
                 <div class="input-group">
                     <div class="input-group-addon">目的城市</div>
                     <input type="text" class="form-control" id="destination" placeholder="目的城市">
+                    <div class="input-group-addon" id="searchDestination">搜索</div>
+                    <div class="input-group-addon" id="markDestination">标记</div>
                 </div>
             </div>
-            <button type="button" id="searchDestination" class="btn btn-info">搜索</button>
-            <button type="button" id="markDestination" class="btn btn-info">标记</button>
         </form>
         <form class="form-inline">
             <h4>-------路径规划-------</h4>
@@ -96,19 +107,21 @@
                 <div class="input-group">
                     <div class="input-group-addon">出发城市</div>
                     <input type="text" class="form-control" id="startAddress" placeholder="出发城市">
-                    <div class="input-group-addon" id="autoGeolocation">自行定位</div>
-                    <div class="input-group-addon" id="handGeolocation">手动定位</div>
+                    <button type="button" class="input-group-addon" id="autoGeolocation">自行定位</button>
+                    <button type="button" class="input-group-addon" id="handGeolocation">手动定位</button>
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">目的城市</div>
                     <input type="text" class="form-control" id="endAddress" placeholder="目的城市">
+                    <button type="button" class="input-group-addon" id="searchCarRoute">汽车导航</button>
+                    <button type="button" class="input-group-addon" id="searchBikeRoute">骑行导航</button>
+                    <button type="button" class="input-group-addon" id="searchWalkRoute">步行导航</button>
                 </div>
             </div>
-            <button type="button" id="searchRoute" class="btn btn-info">搜索</button>
             <button type="button" id="generateRoute" class="btn btn-info">生成轨迹</button>
-            <button type="button" id="openApp" class="btn btn-info">点击去高德地图</button>
+            <!-- <button type="button" id="openApp" class="btn btn-info">点击去高德地图</button> -->
         </form>
         <h4>-------路径规划-------</h4>
         <h4>-------路径规划-------</h4>
@@ -116,8 +129,24 @@
         <button>切换</button>
         <button>清空地图</button>
     </div>
-    <div id="message"></div>
+    <div id="message">
+    </div>
+    <div id="center_message">
+        <div class='title'>选址结果</div>
+        <div class='c'>经纬度:</div>
+        <div id='lnglat'></div>
+        <div class='c'>地址:</div>
+        <div id='address'></div>
+        <div class='c'>最近的路口:</div>
+        <div id='nearestJunction'></div>
+        <div class='c'>最近的路:</div>
+        <div id='nearestRoad'></div>
+        <div class='c'>最近的POI:</div>
+        <div id='nearestPOI'></div>
+    </div>
     <div class="button-group">
+        <input type="button" class="button" value="距离量测" onClick="javascript:startRuler1()" />
+         <input type="button" class="button" id="mouseCatch" value="鼠标选点" onClick="javascript:mouseCatch()" />
         <input id="cityName" class="inputtext" placeholder="请输入城市的名称" type="text" />
         <input id="query" class="button" value="到指定的城市" type="button" />
     </div>
